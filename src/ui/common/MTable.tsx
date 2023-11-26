@@ -31,7 +31,7 @@ const StyledTableCell = withStyles((theme: Theme) =>
       border: "1px solid #1e1e1e",
     },
     root: {
-      padding: 0,
+      padding: "0px 10px",
     },
   })
 )(TableCell);
@@ -40,6 +40,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
       cursor: "pointer",
+      height: 50,
       "&:nth-of-type(odd)": {
         backgroundColor: "#dfdedede",
       },

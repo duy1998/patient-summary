@@ -39,7 +39,7 @@ export default function PatientSummary() {
     {
       title: "Chuyên khoa khám",
       align: "center",
-      width: "20%",
+      width: "10%",
       renderCell: (data: any) => (
         <Typography variant="body2" noWrap={false}>
           {data.name}
