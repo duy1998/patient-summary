@@ -28,6 +28,7 @@ export default function VitalSignBox(props: VitalSignBoxProps) {
           fontSize: 14,
           minWidth: 100,
           textAlign: "center",
+          fontWeight: 600,
         }}
       >
         {title}

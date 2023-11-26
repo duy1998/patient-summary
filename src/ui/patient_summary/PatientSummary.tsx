@@ -1,113 +1,82 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  withStyles,
-  createStyles,
-  Theme,
-} from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import React from "react";
+import React, { useEffect } from "react";
 import TextBox from "../common/TextBox";
 import VitalSignBox from "./VitalSignBox";
-import { useStyles } from "./PatientSummary.styles";
-
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: "#545454",
-      color: theme.palette.common.white,
-      border: "1px solid #1e1e1e",
-    },
-    body: {
-      fontSize: 14,
-      border: "1px solid #1e1e1e",
-    },
-  })
-)(TableCell);
-
-const StyledTableRow = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      cursor: "pointer",
-      "&:nth-of-type(odd)": {
-        backgroundColor: "#dfdedede",
-      },
-      "&:hover": {
-        backgroundColor: "#ada6a6de",
-      },
-    },
-  })
-)(TableRow);
+import MTable, { MColumn } from "../common/MTable";
+import { resultTabs, vitalSignsData } from "./constants";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "src/redux/rootReducer";
+import { ApiStatus, DataState } from "src/redux/common/DataState";
+import { MedicalRecord } from "src/redux/patient_summary/patient_summary.state";
+import {
+  changeResultTabAction,
+  fetchMedicalRecordsAction,
+  fetchResultsAction,
+} from "src/redux/patient_summary/patient_summary.action";
 
 export default function PatientSummary() {
-  const classes = useStyles();
+  const medicalRecords: DataState<MedicalRecord[]> | null = useSelector(
+    (state: RootState) => state.patientSummaryReducer.medicalRecords
+  );
 
-  const vitalSignsData = [
-    {
-      title: "Huyết áp (mmmHg)",
-      color: "#eb9d20",
-      primaryVital: { max: 90, min: 165, value: 120 },
-      secondVital: { max: 90, min: 165, value: 120 },
-    },
-    {
-      title: "Mạch",
-      color: "#eb9d20",
-      primaryVital: { max: 90, min: 165, value: 120 },
-    },
-    {
-      title: "SpO2",
-      color: "#eb9d20",
-      primaryVital: { max: 90, min: 165, value: 120 },
-    },
-    {
-      title: "Nhịp thở",
-      color: "#eb9d20",
-      primaryVital: { max: 90, min: 165, value: 120 },
-    },
-    {
-      title: "Nhiệt độ",
-      color: "#eb9d20",
-      primaryVital: { max: 90, min: 165, value: 120 },
-    },
-  ];
+  const results: DataState<Map<string, MedicalRecord[]>> | null = useSelector(
+    (state: RootState) => state.patientSummaryReducer.results
+  );
 
-  function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number
-  ) {
-    return { name, calories, fat, carbs, protein };
-  }
+  const selectedResultTabs: string | null = useSelector(
+    (state: RootState) => state.patientSummaryReducer.selectedResultTabs
+  );
 
-  const rows = [
-    createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData("Eclair", 262, 16.0, 24, 6.0),
-    createData("Cupcake", 305, 3.7, 67, 4.3),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMedicalRecordsAction());
+  }, [dispatch]);
+
+  const columns: MColumn[] = [
+    {
+      title: "Chuyên khoa khám",
+      align: "center",
+      width: "20%",
+      renderCell: (data: any) => (
+        <Typography variant="body2" noWrap={false}>
+          {data.name}
+        </Typography>
+      ),
+    },
+    {
+      title: "Bác sĩ",
+      align: "center",
+      width: "20%",
+      renderCell: (data: any) => <p>{data.calories}</p>,
+    },
+    {
+      title: "Lý do khám",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.fat}</p>,
+    },
+    {
+      title: "Chẩn đoán xác định",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.carbs}</p>,
+    },
+
+    {
+      title: "Hướng dẫn điều trị",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.protein}</p>,
+    },
+    {
+      title: "LOS nội trú",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.protein}</p>,
+    },
   ];
 
   return (
@@ -122,7 +91,6 @@ export default function PatientSummary() {
       <Grid container spacing={2}>
         <Grid
           item
-          spacing={1}
           xs={9}
           md={10}
           style={{ display: "flex", flexDirection: "column" }}
@@ -152,7 +120,7 @@ export default function PatientSummary() {
               <Grid container spacing={6}>
                 <Grid
                   item
-                  xs={9}
+                  xs={8}
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -160,10 +128,10 @@ export default function PatientSummary() {
                   }}
                 >
                   {vitalSignsData.map((item) => (
-                    <VitalSignBox data={item} />
+                    <VitalSignBox key={item.title} data={item} />
                   ))}
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <div
                     style={{
                       margin: "0px 0px 10px 10px",
@@ -179,7 +147,7 @@ export default function PatientSummary() {
             </div>
           </fieldset>
         </Grid>
-        <Grid item spacing={0} xs={3} md={2}>
+        <Grid item xs={3} md={2}>
           <div
             style={{
               border: "1px solid",
@@ -209,57 +177,24 @@ export default function PatientSummary() {
       >
         <fieldset>
           <legend style={{ fontWeight: 700 }}>Lịch sử khám tại Vinmec</legend>
-          <TableContainer component={Paper} style={{ maxHeight: "300px" }}>
-            <Table
-              stickyHeader
-              className={classes.table}
-              aria-label="simple table"
-              style={{ maxHeight: "300px" }}
-            >
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Ngày giờ</StyledTableCell>
-                  <StyledTableCell align="center">
-                    Chuyên khoa khám
-                  </StyledTableCell>
-                  <StyledTableCell align="center">Bác sĩ</StyledTableCell>
-                  <StyledTableCell align="center">Lý do khám</StyledTableCell>
-                  <StyledTableCell align="center">
-                    Chẩn đoán xác định
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    Hướng dẫn điều trị
-                  </StyledTableCell>
-                  <StyledTableCell align="center">LOS nội trú</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody style={{ maxHeight: "300px", overflowY: "auto" }}>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.calories}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">{row.fat}</StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.carbs}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.protein}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.protein}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.protein}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {medicalRecords?.status === ApiStatus.LOADING ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </div>
+          ) : (
+            <MTable
+              columns={columns}
+              dataList={
+                medicalRecords?.data.map((row) => ({
+                  ...row,
+                  id: row.id,
+                  onClickRow: (data: any) => {
+                    dispatch(fetchResultsAction());
+                  },
+                })) || []
+              }
+            />
+          )}
         </fieldset>
       </div>
       <div
@@ -272,60 +207,45 @@ export default function PatientSummary() {
         }}
       >
         <fieldset>
-          <legend style={{ fontWeight: 700 }}>Lịch sử khám tại Vinmec</legend>
-          <TableContainer
-            component={Paper}
-            style={{ maxHeight: "300px", overflowY: "auto" }}
-          >
-            <Table
-              stickyHeader
-              className={classes.table}
-              aria-label="simple table"
-            >
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Ngày giờ</StyledTableCell>
-                  <StyledTableCell align="center">
-                    Chuyên khoa khám
-                  </StyledTableCell>
-                  <StyledTableCell align="center">Bác sĩ</StyledTableCell>
-                  <StyledTableCell align="center">Lý do khám</StyledTableCell>
-                  <StyledTableCell align="center">
-                    Chẩn đoán xác định
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    Hướng dẫn điều trị
-                  </StyledTableCell>
-                  <StyledTableCell align="center">LOS nội trú</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.calories}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">{row.fat}</StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.carbs}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.protein}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.protein}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.protein}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <legend style={{ fontWeight: 700 }}>Các kết quả</legend>
+          <Grid container spacing={0}>
+            {resultTabs.map((tab) => (
+              <Grid key={tab.id} item xs={3}>
+                <div
+                  style={{
+                    border: "1px solid",
+                    padding: "10px 10px",
+                    textAlign: "center",
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                    cursor: "pointer",
+                    borderColor: "#000",
+                    color: selectedResultTabs === tab.id ? "#fff" : "#000",
+                    backgroundColor:
+                      selectedResultTabs === tab.id ? "#545454" : "#e3e2e2",
+                  }}
+                  onClick={() => {
+                    dispatch(changeResultTabAction(tab.id));
+                  }}
+                >
+                  {tab.title}
+                </div>
+              </Grid>
+            ))}
+          </Grid>
+          {results &&
+            results.status === ApiStatus.SUCCESS &&
+            selectedResultTabs && (
+              <MTable
+                columns={columns}
+                dataList={
+                  results.data[selectedResultTabs]?.map((row) => ({
+                    ...row,
+                    id: row.id,
+                  })) || []
+                }
+              />
+            )}
         </fieldset>
       </div>
     </div>

@@ -1,13 +1,13 @@
-import { DataState } from './patient_summary/patient_summary.state';
-import { combineReducers } from 'redux';
-import dataReducer from './patient_summary/patient_summary.reducer';
+import { combineReducers } from "redux";
+import dataReducer from "./patient_summary/patient_summary.reducer";
+import { PatientSummaryState } from "./patient_summary/patient_summary.state";
 
 export interface RootState {
-    patientSummaryReducer: DataState;
+  patientSummaryReducer: PatientSummaryState;
 }
 
 const rootReducer = combineReducers({
-    patientSummaryReducer: dataReducer
-  });
-  
-  export default rootReducer;
+  patientSummaryReducer: dataReducer,
+});
+
+export default rootReducer;
