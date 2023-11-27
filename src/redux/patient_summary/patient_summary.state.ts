@@ -1,30 +1,48 @@
+import PatientSummary from "src/ui/patient_summary/PatientSummary";
 import { DataState } from "../common/DataState";
 
 export interface PatientInfo {
-  pid: string;
-  fullName: string;
+  uuid: string;
+  display: string;
   age: number;
   gender: string;
   allergy: string;
-  chronicDiseases: string;
-  insurance: string;
-  height: string;
-  weigh: string;
-  symptom: string;
+  insurance: boolean;
+  vital: {
+    height: string;
+    weight: string;
+    allergies: string[];
+    chronicDisease: string;
+  };
 }
 
 export interface MedicalRecord {
-  id: any;
-  name: string;
-  calories: number;
-  fat: number;
-  carbs: number;
-  protein: number;
+  uuid: string;
+  startDatetime: string;
+  location: {
+    specialty: string;
+  };
+  diagnosis: {
+    visitReason?: string;
+    treatmentPlan?: string;
+    diagnosis?: string;
+    creatorName?: string;
+  };
+}
+
+export interface PatientSummaryData {
+  patientInfo: PatientInfo | null;
+  medicalRecords: MedicalRecord[] | null;
+  selectedResultTabs: string | null;
+  results: Map<string, MedicalRecord[]> | null;
+  drugOrders: {
+    visitDrugOrders: [];
+  };
+  labOrders: [];
+  procedureOrders: [];
+  imagingDiagnosisOrders: [];
 }
 
 export interface PatientSummaryState {
-  patientInfo: DataState<PatientInfo> | null,
-  medicalRecords: DataState<MedicalRecord[]> | null;
-  selectedResultTabs: string | null;
-  results: DataState<Map<string, MedicalRecord[]>> | null;
+  patientSummaryData: DataState<PatientSummaryData> | null;
 }

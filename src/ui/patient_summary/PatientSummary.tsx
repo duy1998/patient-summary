@@ -8,126 +8,237 @@ import MTable, { MColumn } from "../common/MTable";
 import { resultTabs, vitalSignsData } from "./constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/redux/rootReducer";
-import { ApiStatus, DataState } from "src/redux/common/DataState";
+import { ApiStatus } from "src/redux/common/DataState";
 import {
   MedicalRecord,
   PatientInfo,
 } from "src/redux/patient_summary/patient_summary.state";
 import {
   changeResultTabAction,
-  fetchMedicalRecordsAction,
-  fetchResultsAction,
+  fetchPatientSummaryAction,
 } from "src/redux/patient_summary/patient_summary.action";
+import { format } from "date-fns";
 
 export default function PatientSummary() {
   const patientInfo: PatientInfo | null = useSelector((state: RootState) =>
-    state.patientSummaryReducer.patientInfo?.status === ApiStatus.SUCCESS &&
-    state.patientSummaryReducer.patientInfo.data
-      ? state.patientSummaryReducer.patientInfo.data
+    state.patientSummaryReducer.patientSummaryData?.status ===
+      ApiStatus.SUCCESS &&
+    state.patientSummaryReducer.patientSummaryData?.data?.patientInfo
+      ? state.patientSummaryReducer?.patientSummaryData.data.patientInfo
       : null
   );
 
-  const medicalRecords: DataState<MedicalRecord[]> | null = useSelector(
-    (state: RootState) => state.patientSummaryReducer.medicalRecords
+  const medicalRecords: MedicalRecord[] | null = useSelector(
+    (state: RootState) =>
+      state.patientSummaryReducer.patientSummaryData?.status ===
+        ApiStatus.SUCCESS &&
+      state.patientSummaryReducer.patientSummaryData?.data?.medicalRecords
+        ? state.patientSummaryReducer?.patientSummaryData.data.medicalRecords
+        : null
   );
 
-  const results: DataState<Map<string, MedicalRecord[]>> | null = useSelector(
-    (state: RootState) => state.patientSummaryReducer.results
+  console.log(medicalRecords);
+
+  const results: Map<string, MedicalRecord[]> | null = useSelector(
+    (state: RootState) =>
+      state.patientSummaryReducer.patientSummaryData?.status ===
+        ApiStatus.SUCCESS &&
+      state.patientSummaryReducer.patientSummaryData?.data?.results
+        ? state.patientSummaryReducer?.patientSummaryData.data.results
+        : null
   );
 
-  const selectedResultTabs: string | null = useSelector(
-    (state: RootState) => state.patientSummaryReducer.selectedResultTabs
+  const selectedResultTabs: string | null = useSelector((state: RootState) =>
+    state.patientSummaryReducer.patientSummaryData?.status ===
+      ApiStatus.SUCCESS &&
+    state.patientSummaryReducer.patientSummaryData?.data?.selectedResultTabs
+      ? state.patientSummaryReducer?.patientSummaryData.data.selectedResultTabs
+      : null
   );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchMedicalRecordsAction());
+    dispatch(fetchPatientSummaryAction());
   }, [dispatch]);
 
   const medicalRecordColumns: MColumn[] = [
+    {
+      title: "Ngày giờ",
+      align: "center",
+      width: "5%",
+      renderCell: (data: any) => (
+        <p>{format(new Date(data.startDatetime), "HH:mm dd/mm/yyyy")}</p>
+      ),
+    },
     {
       title: "Chuyên khoa khám",
       align: "center",
       width: "15%",
       renderCell: (data: any) => (
         <Typography variant="body2" noWrap={false}>
-          {data.name}
+          {data.location.specialty}
         </Typography>
       ),
     },
     {
       title: "Bác sĩ",
       align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.calories}</p>,
+      width: "5%",
+      renderCell: (data: any) => <p>{data?.diagnosis?.creatorName ?? ""}</p>,
     },
     {
       title: "Lý do khám",
       align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.fat}</p>,
+      width: "20%",
+      renderCell: (data: any) => <p>{data?.diagnosis?.diagnosis ?? ""}</p>,
     },
     {
       title: "Chẩn đoán xác định",
       align: "center",
       width: "10%",
-      renderCell: (data: any) => <p>{data.carbs}</p>,
+      renderCell: (data: any) => <p>{data?.diagnosis?.visitReason ?? ""}</p>,
     },
 
     {
       title: "Hướng dẫn điều trị",
       align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.protein}</p>,
+      width: "40%",
+      renderCell: (data: any) => <p>{data?.diagnosis?.treatmentPlan ?? ""}</p>,
     },
     {
       title: "LOS nội trú",
       align: "center",
       width: "10%",
-      renderCell: (data: any) => <p>{data.protein}</p>,
+      renderCell: (data: any) => <p>{1}</p>,
     },
   ];
 
-  const resultColumns: MColumn[] = [
-    {
-      title: "Ngày giờ",
-      align: "center",
-      width: "15%",
-      renderCell: (data: any) => <p>{data.date}</p>,
-    },
-    {
-      title: "Loại xét nghiệm",
-      align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.type}</p>,
-    },
-    {
-      title: "Tên xét nghiệm / chỉ số",
-      align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.name}</p>,
-    },
-    {
-      title: "Tham chiếu",
-      align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.ref}</p>,
-    },
+  const resultColumns: { [key: string]: MColumn[] } = {
+    RESULT_TAB_1: [
+      {
+        title: "Ngày giờ",
+        align: "center",
+        width: "5%",
+        renderCell: (data: any) => (
+          <p>{format(new Date(data.encounterDateTime), "HH:mm dd/mm/yyyy")}</p>
+        ),
+      },
+      {
+        title: "Loại xét nghiệm",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.conceptNameToDisplay}</p>,
+      },
+      {
+        title: "Tên xét nghiệm / chỉ số",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.formFieldPath}</p>,
+      },
+      {
+        title: "Tham chiếu",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.ref}</p>,
+      },
 
-    {
-      title: "Kết quả",
-      align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.result}</p>,
-    },
-    {
-      title: "Đơn vị",
-      align: "center",
-      width: "10%",
-      renderCell: (data: any) => <p>{data.unit}</p>,
-    },
-  ];
+      {
+        title: "Kết quả",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.value}</p>,
+      },
+      {
+        title: "Đơn vị",
+        align: "center",
+        width: "2%",
+        renderCell: (data: any) => <p>{data.concept.unit ?? ""}</p>,
+      },
+    ],
+    RESULT_TAB_2: [
+      {
+        title: "Ngày giờ",
+        align: "center",
+        width: "5%",
+        renderCell: (data: any) => (
+          <p>{format(new Date(data.encounterDateTime), "HH:mm dd/mm/yyyy")}</p>
+        ),
+      },
+      {
+        title: "Loại chụp",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.formFieldPath}</p>,
+      },
+      {
+        title: "Kết quả",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.value}</p>,
+      },
+    ],
+    RESULT_TAB_3: [
+      {
+        title: "Ngày giờ",
+        align: "center",
+        width: "5%",
+        renderCell: (data: any) => (
+          <p>{format(new Date(data.encounterDateTime), "HH:mm dd/mm/yyyy")}</p>
+        ),
+      },
+      {
+        title: "Loại",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.conceptNameToDisplay}</p>,
+      },
+      {
+        title: "Tên / chỉ số",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.formFieldPath}</p>,
+      },
+      {
+        title: "Kết quả",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data.value}</p>,
+      },
+    ],
+    RESULT_TAB_4: [
+      {
+        title: "Ngày giờ",
+        align: "center",
+        width: "5%",
+        renderCell: (data: any) => (
+          <p>
+            {format(new Date(data.visit.startDateTime), "HH:mm dd/mm/yyyy")}
+          </p>
+        ),
+      },
+      {
+        title: "Tên",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => <p>{data?.drugOrder?.drugNonCoded ?? ""}</p>,
+      },
+      {
+        title: "Cách dùng",
+        align: "center",
+        width: "10%",
+        renderCell: (data: any) => (
+          <p>
+            {`${data?.dosingInstructions?.dose ?? ""} ${
+              data?.dosingInstructions?.doseUnits ?? ""
+            }, ${data?.dosingInstructions?.frequency} - ${data?.duration} ${
+              data?.durationUnits
+            }`}
+          </p>
+        ),
+      },
+    ],
+  };
 
   return (
     <div
@@ -147,8 +258,10 @@ export default function PatientSummary() {
         }}
       >
         {`
-        PATIENT SUMMARY - TÓM TẮT THÔNG TIN BỆNH NHÂN - ${patientInfo?.fullName} - ${patientInfo?.gender} -
-        ${patientInfo?.age} tuổi - PID: ${patientInfo?.pid} - TRUNG BÌNH
+        PATIENT SUMMARY - TÓM TẮT THÔNG TIN BỆNH NHÂN - ${
+          patientInfo?.display
+        } - ${patientInfo?.gender === "M" ? "Nam" : "Nữ"} -
+        ${patientInfo?.age} tuổi - PID: ${patientInfo?.uuid} - TRUNG BÌNH
       `}
       </div>
       <Grid container spacing={2}>
@@ -160,11 +273,15 @@ export default function PatientSummary() {
         >
           <Grid container spacing={1}>
             <Grid item xs={4}>
-              <TextBox text={`Dị ứng: ${patientInfo?.allergy}`} />
+              <TextBox
+                text={`Dị ứng: ${patientInfo?.vital?.allergies?.join(",")}`}
+              />
             </Grid>
             <Grid item xs={6}>
               <TextBox
-                text={`Bệnh mãn tính: ${patientInfo?.chronicDiseases}`}
+                text={`Bệnh mãn tính: ${
+                  patientInfo?.vital?.chronicDisease ?? ""
+                }`}
               />
             </Grid>
             <Grid item xs={2}>
@@ -205,7 +322,10 @@ export default function PatientSummary() {
                       height: "calc(100% - 15px)",
                     }}
                   >
-                    Lý do khám:
+                    <span>Lý do khám: </span>
+                    <span style={{ fontWeight: 600 }}>
+                      {patientInfo?.vital?.chronicDisease ?? ""}
+                    </span>
                   </div>
                 </Grid>
               </Grid>
@@ -224,10 +344,12 @@ export default function PatientSummary() {
           >
             <p style={{ fontWeight: 700, margin: 0 }}>Đặc điểm bệnh nhân</p>
             <div style={{ color: "#ca8517", fontSize: 18, fontWeight: 700 }}>
-              <p>60 cm</p>
-              <p>12 kg</p>
+              <p>{patientInfo?.vital?.height ?? ""}</p>
+              <p>{patientInfo?.vital?.weight ?? ""}</p>
             </div>
-            <p style={{ margin: 0, fontSize: 15 }}>{patientInfo?.symptom}</p>
+            <p style={{ margin: 0, fontSize: 15 }}>
+              {patientInfo?.vital?.chronicDisease ?? ""}
+            </p>
           </div>
         </Grid>
       </Grid>
@@ -242,7 +364,7 @@ export default function PatientSummary() {
       >
         <fieldset style={{ height: "100%" }}>
           <legend style={{ fontWeight: 700 }}>Lịch sử khám tại Vinmec</legend>
-          {medicalRecords?.status === ApiStatus.LOADING ? (
+          {!medicalRecords ? (
             <div style={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </div>
@@ -250,12 +372,10 @@ export default function PatientSummary() {
             <MTable
               columns={medicalRecordColumns}
               dataList={
-                medicalRecords?.data.map((row) => ({
+                (medicalRecords ?? []).map((row: MedicalRecord) => ({
                   ...row,
-                  id: row.id,
-                  onClickRow: (data: any) => {
-                    dispatch(fetchResultsAction());
-                  },
+                  id: row.uuid,
+                  onClickRow: (data: MedicalRecord) => {},
                 })) || []
               }
             />
@@ -299,19 +419,17 @@ export default function PatientSummary() {
               </Grid>
             ))}
           </Grid>
-          {results &&
-            results.status === ApiStatus.SUCCESS &&
-            selectedResultTabs && (
-              <MTable
-                columns={resultColumns}
-                dataList={
-                  results.data[selectedResultTabs]?.map((row) => ({
-                    ...row,
-                    id: row.id,
-                  })) || []
-                }
-              />
-            )}
+          {results && selectedResultTabs && (
+            <MTable
+              columns={resultColumns[selectedResultTabs]}
+              dataList={
+                results[selectedResultTabs]?.map((row) => ({
+                  ...row,
+                  id: row.id,
+                })) || []
+              }
+            />
+          )}
         </fieldset>
       </div>
     </div>
