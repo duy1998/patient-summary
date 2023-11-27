@@ -1,4 +1,3 @@
-import PatientSummary from "src/ui/patient_summary/PatientSummary";
 import { DataState } from "../common/DataState";
 
 export interface PatientInfo {
@@ -13,6 +12,18 @@ export interface PatientInfo {
     weight: string;
     allergies: string[];
     chronicDisease: string;
+    bloodPressureUnit: string;
+    bloodPressure: string;
+    bloodPressureNormalRange: string;
+    pulse: string;
+    pulseNormalRange: string;
+    saturatedPeripheralOxygen: string;
+    saturatedPeripheralOxygenNormalRange: string;
+    temperatureUnit: string;
+    temperature: string;
+    temperatureNormalRange: string;
+    respiratory: string;
+    respiratoryNormalRange: string;
   };
 }
 

@@ -5,7 +5,15 @@ import React, { useEffect } from "react";
 import TextBox from "../common/TextBox";
 import VitalSignBox from "./VitalSignBox";
 import MTable, { MColumn } from "../common/MTable";
-import { resultTabs, vitalSignsData } from "./constants";
+import {
+  BLOOD_PRESSURE_INDEX,
+  PULSE_INDEX,
+  RESPIPATORY_INDEX,
+  resultTabs,
+  SPO2_INDEX,
+  TEMPERATURE_INDEX,
+  vitalSignsData,
+} from "./constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/redux/rootReducer";
 import { ApiStatus } from "src/redux/common/DataState";
@@ -36,8 +44,6 @@ export default function PatientSummary() {
         ? state.patientSummaryReducer?.patientSummaryData.data.medicalRecords
         : null
   );
-
-  console.log(medicalRecords);
 
   const results: Map<string, MedicalRecord[]> | null = useSelector(
     (state: RootState) =>
@@ -240,6 +246,45 @@ export default function PatientSummary() {
     ],
   };
 
+  const getRangeFromIndex = (index) => {
+    switch (index) {
+      case BLOOD_PRESSURE_INDEX: {
+        return {
+          range: patientInfo?.vital?.bloodPressureNormalRange,
+          value: patientInfo?.vital.bloodPressure,
+        };
+      }
+      case PULSE_INDEX: {
+        return {
+          range: patientInfo?.vital?.pulseNormalRange,
+          value: patientInfo?.vital.pulse,
+        };
+      }
+      case SPO2_INDEX: {
+        return {
+          range: patientInfo?.vital?.saturatedPeripheralOxygenNormalRange,
+          value: patientInfo?.vital.saturatedPeripheralOxygen,
+        };
+      }
+      case RESPIPATORY_INDEX: {
+        return {
+          range: patientInfo?.vital?.temperatureNormalRange,
+          value: patientInfo?.vital.temperature,
+        };
+      }
+      case TEMPERATURE_INDEX: {
+        return {
+          range: patientInfo?.vital?.respiratoryNormalRange,
+          value: patientInfo?.vital.respiratory,
+        };
+      }
+    }
+    return {
+      range: "",
+      value: "",
+    };
+  };
+
   return (
     <div
       style={{
@@ -309,9 +354,16 @@ export default function PatientSummary() {
                     justifyContent: "space-between",
                   }}
                 >
-                  {vitalSignsData.map((item) => (
-                    <VitalSignBox key={item.title} data={item} />
-                  ))}
+                  {vitalSignsData
+                    .map((item, index) => {
+                      return {
+                        ...item,
+                        primaryVital: getRangeFromIndex(index),
+                      };
+                    })
+                    .map((item1) => (
+                      <VitalSignBox key={item1.title} data={item1} />
+                    ))}
                 </Grid>
                 <Grid item xs={4}>
                   <div

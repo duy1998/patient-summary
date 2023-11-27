@@ -10,31 +10,36 @@ export const resultTabs = [
   { id: RESULT_TAB_4, title: "Danh sách thuốc" },
 ];
 
+export const BLOOD_PRESSURE_INDEX = 0;
+export const PULSE_INDEX = 1;
+export const SPO2_INDEX = 2;
+export const RESPIPATORY_INDEX = 3;
+export const TEMPERATURE_INDEX = 4;
+
 export const vitalSignsData = [
   {
-    title: "Huyết áp (mmmHg)",
+    title: "Huyết áp",
     color: "#eb9d20",
-    primaryVital: { max: 90, min: 165, value: 120 },
-    secondVital: { max: 90, min: 165, value: 120 },
+    primaryVital: { range: "", value: 0 },
   },
   {
     title: "Mạch",
     color: "#30d022",
-    primaryVital: { max: 90, min: 165, value: 120 },
+    primaryVital: { range: "", value: 0 },
   },
   {
     title: "SpO2",
     color: "#1da1f2",
-    primaryVital: { max: 90, min: 165, value: 120 },
+    primaryVital: { range: "", value: 0 },
   },
   {
     title: "Nhịp thở",
     color: "#df1df2",
-    primaryVital: { max: 90, min: 165, value: 120 },
+    primaryVital: { range: "", value: 0 },
   },
   {
     title: "Nhiệt độ",
     color: "#9aafbb",
-    primaryVital: { max: 90, min: 165, value: 120 },
+    primaryVital: { range: "", value: 0 },
   },
 ];

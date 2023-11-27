@@ -1,9 +1,8 @@
 import React from "react";
 
 interface VitalSign {
-  min: number;
-  max: number;
-  value: number;
+  range: string | undefined;
+  value: string | undefined;
 }
 
 interface VitalSignBoxProps {
@@ -11,11 +10,10 @@ interface VitalSignBoxProps {
     title: string;
     color: string;
     primaryVital: VitalSign;
-    secondVital?: VitalSign;
   };
 }
 export default function VitalSignBox(props: VitalSignBoxProps) {
-  const { title, color, primaryVital, secondVital } = props.data;
+  const { title, color, primaryVital } = props.data;
 
   return (
     <div
@@ -35,12 +33,8 @@ export default function VitalSignBox(props: VitalSignBoxProps) {
       </div>
       <div style={{ fontSize: 25, color: color, fontWeight: 600 }}>{`${
         primaryVital.value ?? "-"
-      }${secondVital ? ` / ${secondVital.value}` : ""}`}</div>
-      <div style={{ fontSize: 15 }}>{`${primaryVital.min} - ${
-        primaryVital.max
-      }${
-        secondVital ? ` | ${secondVital.min} - ${secondVital.max}` : ""
       }`}</div>
+      <div style={{ fontSize: 15 }}>{`${primaryVital.range}`}</div>
     </div>
   );
 }
