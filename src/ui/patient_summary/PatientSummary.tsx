@@ -9,7 +9,10 @@ import { resultTabs, vitalSignsData } from "./constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/redux/rootReducer";
 import { ApiStatus, DataState } from "src/redux/common/DataState";
-import { MedicalRecord } from "src/redux/patient_summary/patient_summary.state";
+import {
+  MedicalRecord,
+  PatientInfo,
+} from "src/redux/patient_summary/patient_summary.state";
 import {
   changeResultTabAction,
   fetchMedicalRecordsAction,
@@ -17,6 +20,13 @@ import {
 } from "src/redux/patient_summary/patient_summary.action";
 
 export default function PatientSummary() {
+  const patientInfo: PatientInfo | null = useSelector((state: RootState) =>
+    state.patientSummaryReducer.patientInfo?.status === ApiStatus.SUCCESS &&
+    state.patientSummaryReducer.patientInfo.data
+      ? state.patientSummaryReducer.patientInfo.data
+      : null
+  );
+
   const medicalRecords: DataState<MedicalRecord[]> | null = useSelector(
     (state: RootState) => state.patientSummaryReducer.medicalRecords
   );
@@ -128,6 +138,19 @@ export default function PatientSummary() {
         height: "calc(100vh - 20px)",
       }}
     >
+      <div
+        style={{
+          fontWeight: 800,
+          textAlign: "center",
+          fontSize: 16,
+          margin: "0px 10px 20px 10px",
+        }}
+      >
+        {`
+        PATIENT SUMMARY - TÓM TẮT THÔNG TIN BỆNH NHÂN - ${patientInfo?.fullName} - ${patientInfo?.gender} -
+        ${patientInfo?.age} tuổi - PID: ${patientInfo?.pid} - TRUNG BÌNH
+      `}
+      </div>
       <Grid container spacing={2}>
         <Grid
           item
@@ -137,16 +160,18 @@ export default function PatientSummary() {
         >
           <Grid container spacing={1}>
             <Grid item xs={4}>
-              <TextBox text={"Dị ứng: "} />
+              <TextBox text={`Dị ứng: ${patientInfo?.allergy}`} />
             </Grid>
             <Grid item xs={6}>
-              <TextBox text={"Bệnh mãn tính: "} />
+              <TextBox
+                text={`Bệnh mãn tính: ${patientInfo?.chronicDiseases}`}
+              />
             </Grid>
             <Grid item xs={2}>
-              <TextBox text={"Bảo hiểm: "} />
+              <TextBox text={`Bảo hiểm: ${patientInfo?.insurance}`} />
             </Grid>
           </Grid>
-          <fieldset style={{ height: "100%", marginTop: 20 }}>
+          <fieldset style={{ height: "100%", marginTop: 10 }}>
             <legend style={{ fontWeight: 700 }}>Lần khám hiện tại</legend>
             <div
               style={{
@@ -198,11 +223,11 @@ export default function PatientSummary() {
             }}
           >
             <p style={{ fontWeight: 700, margin: 0 }}>Đặc điểm bệnh nhân</p>
-            <div style={{ color: "#ca8517", fontSize: 20, fontWeight: 700 }}>
+            <div style={{ color: "#ca8517", fontSize: 18, fontWeight: 700 }}>
               <p>60 cm</p>
               <p>12 kg</p>
             </div>
-            <p>Gặp vấn đề khó nghe</p>
+            <p style={{ margin: 0, fontSize: 15 }}>{patientInfo?.symptom}</p>
           </div>
         </Grid>
       </Grid>
@@ -244,6 +269,7 @@ export default function PatientSummary() {
           flex: 2,
           display: "flex",
           flexDirection: "column",
+          marginBottom: 10,
         }}
       >
         <fieldset style={{ height: "100%" }}>

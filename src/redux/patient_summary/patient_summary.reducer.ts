@@ -14,6 +14,7 @@ import {
 import { PatientSummaryState } from "./patient_summary.state";
 
 const initialState: PatientSummaryState = {
+  patientInfo: null,
   medicalRecords: null,
   selectedResultTabs: null,
   results: null,
@@ -29,12 +30,20 @@ const dataReducer = (state = initialState, action) => {
     case FETCH_MEDICAL_RECORDS_SUCCESS:
       return {
         ...state,
-        medicalRecords: { status: ApiStatus.SUCCESS, data: action.payload },
+        medicalRecords: {
+          status: ApiStatus.SUCCESS,
+          data: action.payload.medicalRecords,
+        },
+        patientInfo: {
+          status: ApiStatus.SUCCESS,
+          data: action.payload.patientInfo,
+        },
       };
     case FETCH_MEDICAL_RECORDS_FAILURE:
       return {
         ...state,
-        medicalRecords: { status: ApiStatus.ERROR, error: action.payload },
+        medicalRecords: { status: ApiStatus.ERROR },
+        patientInfo: { status: ApiStatus.ERROR },
       };
 
     case FETCH_RESULTS_REQUEST:

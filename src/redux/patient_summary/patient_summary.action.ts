@@ -1,3 +1,4 @@
+import { PatientInfo } from "./patient_summary.state";
 // actions.ts
 
 import { fetchData } from "../../services/rest_api";
@@ -14,13 +15,14 @@ export const CHANGE_RESULT_TAB = "CHANGE_RESULT_TAB";
 
 function createMedicalRecordData(
   id: any,
+  date: string,
   name: string,
   calories: number,
   fat: number,
   carbs: number,
   protein: number
 ) {
-  return { id, name, calories, fat, carbs, protein };
+  return { id, date, name, calories, fat, carbs, protein };
 }
 
 function createResultData(
@@ -34,34 +36,184 @@ function createResultData(
   return { date, type, name, ref, result, unit };
 }
 
+const fakePatientInfo = {
+  pid: "123456",
+  fullName: "Nguyễn Thu Hà",
+  age: 20,
+  gender: "Nam",
+  allergy: "Dị ứng",
+  chronicDiseases: "Bệnh mãn tính",
+  insurance: "Có",
+  height: "60cm",
+  weigh: "12kg",
+  symptom: "Gặp vấn đề khó nghe",
+};
+
 const fakeMedicalRecordData = [
-  createMedicalRecordData(1, "Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createMedicalRecordData(
+    1,
+    "09:15 31/10/2023",
+    "Frozen yoghurt",
+    159,
+    6.0,
+    24,
+    4.0
+  ),
   createMedicalRecordData(
     2,
+    "09:15 31/10/2023",
     "Ice cream sandwichsdasdasd asd as das das d asd asd asdasd asa",
     237,
     9.0,
     37,
     4.3
   ),
-  createMedicalRecordData(3, "Eclair", 262, 16.0, 24, 6.0),
-  createMedicalRecordData(4, "Cupcake", 305, 3.7, 67, 4.3),
-  createMedicalRecordData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(6, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(7, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(8, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(9, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(10, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(11, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(12, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(13, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(14, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(15, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(16, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(17, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(18, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(19, "Gingerbread", 356, 16.0, 49, 3.9),
-  createMedicalRecordData(20, "Gingerbread", 356, 16.0, 49, 3.9),
+  createMedicalRecordData(3, "09:15 31/10/2023", "Eclair", 262, 16.0, 24, 6.0),
+  createMedicalRecordData(4, "09:15 31/10/2023", "Cupcake", 305, 3.7, 67, 4.3),
+  createMedicalRecordData(
+    5,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    6,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    7,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    8,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    9,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    10,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    11,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    12,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    13,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    14,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    15,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    16,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    17,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    18,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    19,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
+  createMedicalRecordData(
+    20,
+    "09:15 31/10/2023",
+    "Gingerbread",
+    356,
+    16.0,
+    49,
+    3.9
+  ),
 ];
 
 const fakeResultData = [
@@ -133,7 +285,10 @@ export const fetchMedicalRecordsAction =
       const response = await fetchData();
       dispatch({
         type: FETCH_MEDICAL_RECORDS_SUCCESS,
-        payload: fakeMedicalRecordData,
+        payload: {
+          medicalRecords: fakeMedicalRecordData,
+          patientInfo: fakePatientInfo,
+        },
       });
     } catch (error: any) {
       dispatch({
