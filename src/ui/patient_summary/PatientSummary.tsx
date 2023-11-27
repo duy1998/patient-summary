@@ -35,11 +35,11 @@ export default function PatientSummary() {
     dispatch(fetchMedicalRecordsAction());
   }, [dispatch]);
 
-  const columns: MColumn[] = [
+  const medicalRecordColumns: MColumn[] = [
     {
       title: "Chuyên khoa khám",
       align: "center",
-      width: "10%",
+      width: "15%",
       renderCell: (data: any) => (
         <Typography variant="body2" noWrap={false}>
           {data.name}
@@ -49,7 +49,7 @@ export default function PatientSummary() {
     {
       title: "Bác sĩ",
       align: "center",
-      width: "20%",
+      width: "10%",
       renderCell: (data: any) => <p>{data.calories}</p>,
     },
     {
@@ -76,6 +76,46 @@ export default function PatientSummary() {
       align: "center",
       width: "10%",
       renderCell: (data: any) => <p>{data.protein}</p>,
+    },
+  ];
+
+  const resultColumns: MColumn[] = [
+    {
+      title: "Ngày giờ",
+      align: "center",
+      width: "15%",
+      renderCell: (data: any) => <p>{data.date}</p>,
+    },
+    {
+      title: "Loại xét nghiệm",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.type}</p>,
+    },
+    {
+      title: "Tên xét nghiệm / chỉ số",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.name}</p>,
+    },
+    {
+      title: "Tham chiếu",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.ref}</p>,
+    },
+
+    {
+      title: "Kết quả",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.result}</p>,
+    },
+    {
+      title: "Đơn vị",
+      align: "center",
+      width: "10%",
+      renderCell: (data: any) => <p>{data.unit}</p>,
     },
   ];
 
@@ -175,7 +215,7 @@ export default function PatientSummary() {
           flexDirection: "column",
         }}
       >
-        <fieldset>
+        <fieldset style={{ height: "100%" }}>
           <legend style={{ fontWeight: 700 }}>Lịch sử khám tại Vinmec</legend>
           {medicalRecords?.status === ApiStatus.LOADING ? (
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -183,7 +223,7 @@ export default function PatientSummary() {
             </div>
           ) : (
             <MTable
-              columns={columns}
+              columns={medicalRecordColumns}
               dataList={
                 medicalRecords?.data.map((row) => ({
                   ...row,
@@ -206,7 +246,7 @@ export default function PatientSummary() {
           flexDirection: "column",
         }}
       >
-        <fieldset>
+        <fieldset style={{ height: "100%" }}>
           <legend style={{ fontWeight: 700 }}>Các kết quả</legend>
           <Grid container spacing={0}>
             {resultTabs.map((tab) => (
@@ -237,7 +277,7 @@ export default function PatientSummary() {
             results.status === ApiStatus.SUCCESS &&
             selectedResultTabs && (
               <MTable
-                columns={columns}
+                columns={resultColumns}
                 dataList={
                   results.data[selectedResultTabs]?.map((row) => ({
                     ...row,
