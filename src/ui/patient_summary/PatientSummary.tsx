@@ -24,6 +24,7 @@ import {
 import {
   changeResultTabAction,
   fetchPatientSummaryAction,
+  getResultsByMedicalRecordAction,
 } from "src/redux/patient_summary/patient_summary.action";
 import { format } from "date-fns";
 
@@ -427,7 +428,9 @@ export default function PatientSummary() {
                 (medicalRecords ?? []).map((row: MedicalRecord) => ({
                   ...row,
                   id: row.uuid,
-                  onClickRow: (data: MedicalRecord) => {},
+                  onClickRow: (data: MedicalRecord) => {
+                    // dispatch(getResultsByMedicalRecordAction(data.uuid));
+                  },
                 })) || []
               }
             />

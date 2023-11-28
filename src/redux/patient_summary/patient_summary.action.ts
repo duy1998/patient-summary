@@ -53,7 +53,7 @@ export const fetchPatientSummaryAction =
     }
   };
 
-export const fetchResultsAction =
+export const getResultsByMedicalRecordAction =
   (uuid: string | undefined) => async (dispatch: any, getState: any) => {
     try {
       if (
