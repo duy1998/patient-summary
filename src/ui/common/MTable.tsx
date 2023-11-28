@@ -77,7 +77,7 @@ export default function MTable(props: MTableProps) {
   return (
     <TableContainer
       component={Paper}
-      style={{ maxHeight: 600, overflowY: "auto" }}
+      style={{ maxHeight: 600, minHeight: 300, overflowY: "auto" }}
     >
       <Table stickyHeader className={classes.table} aria-label="simple table">
         <TableHead>
