@@ -11,3 +11,56 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.draid-container {
+  all: initial;
+  isolation: isolate;
+}
+
+.draid-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: white;
+}
+
+.draid-markdown th, .draid-markdown td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.draid-markdown th {
+  background-color: #f2f2f2;
+}
+
+.draid-markdown ol {
+  padding-left: 1.5rem;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  display: block;
+}
+
+.draid-markdown ul {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: disc outside none;
+}
+
+.draid-markdown ul li {
+  margin-left: 2rem;
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+.draid-markdown h1,
+.draid-markdown h2,
+.draid-markdown h3,
+.draid-markdown h4,
+.draid-markdown h5,
+.draid-markdown h6 {
+  color: #0c1123 !important;
+  font-weight: 600 !important;
+}
+.draid-markdown strong {
+  font-weight: 700 !important;
+}

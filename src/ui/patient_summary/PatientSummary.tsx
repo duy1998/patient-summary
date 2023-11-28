@@ -2,6 +2,7 @@
 import { CircularProgress, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import React, { useEffect } from "react";
+import gfm from "remark-gfm";
 import TextBox from "../common/TextBox";
 import VitalSignBox from "./VitalSignBox";
 import MTable, { MColumn } from "../common/MTable";
@@ -28,6 +29,7 @@ import {
 } from "src/redux/patient_summary/patient_summary.action";
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "src/utils/common";
+import ReactMarkdown from "react-markdown";
 
 const PatientSummary: React.FC = () => {
   const patientInfo: PatientInfo | null = useSelector((state: RootState) =>
@@ -155,7 +157,15 @@ const PatientSummary: React.FC = () => {
         title: "Kết quả",
         align: "center",
         width: "70%",
-        renderCell: (data: any) => <p>{data.value}</p>,
+        renderCell: (data: any) => (
+          <ReactMarkdown
+            skipHtml={true}
+            className="draid-markdown"
+            remarkPlugins={[gfm]}
+          >
+            {data?.value?.replace(/\n/g, "  \n") ?? ""}
+          </ReactMarkdown>
+        ),
       },
       // {
       //   title: "Đơn vị",
@@ -303,9 +313,11 @@ const PatientSummary: React.FC = () => {
       >
         {`
         PATIENT SUMMARY - TÓM TẮT THÔNG TIN BỆNH NHÂN - ${
-          patientInfo?.display
+          patientInfo?.display ?? ""
         } - ${patientInfo?.gender === "M" ? "Nam" : "Nữ"} -
-        ${patientInfo?.age} tuổi - PID: ${patientInfo?.uuid} - TRUNG BÌNH
+        ${patientInfo?.age ?? "-"} tuổi - PID: ${
+          patientInfo?.uuid ?? " "
+        } - TRUNG BÌNH
       `}
       </div>
       <Grid container spacing={2}>
@@ -318,7 +330,9 @@ const PatientSummary: React.FC = () => {
           <Grid container spacing={1}>
             <Grid item xs={4}>
               <TextBox
-                text={`Dị ứng: ${patientInfo?.vital?.allergies?.join(",")}`}
+                text={`Dị ứng: ${
+                  patientInfo?.vital?.allergies?.join(",") ?? ""
+                }`}
               />
             </Grid>
             <Grid item xs={6}>
@@ -329,7 +343,7 @@ const PatientSummary: React.FC = () => {
               />
             </Grid>
             <Grid item xs={2}>
-              <TextBox text={`Bảo hiểm: ${patientInfo?.insurance}`} />
+              <TextBox text={`Bảo hiểm: ${patientInfo?.insurance ?? ""}`} />
             </Grid>
           </Grid>
           <fieldset style={{ height: "100%", marginTop: 10 }}>

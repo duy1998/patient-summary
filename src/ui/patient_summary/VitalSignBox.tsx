@@ -34,7 +34,7 @@ export default function VitalSignBox(props: VitalSignBoxProps) {
       <div style={{ fontSize: 25, color: color, fontWeight: 600 }}>{`${
         primaryVital.value ?? "-"
       }`}</div>
-      <div style={{ fontSize: 15 }}>{`${primaryVital.range}`}</div>
+      <div style={{ fontSize: 15 }}>{`${primaryVital.range ?? ""}`}</div>
     </div>
   );
 }
