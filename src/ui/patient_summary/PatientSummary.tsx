@@ -128,7 +128,7 @@ const PatientSummary: React.FC = () => {
       {
         title: "Ngày giờ",
         align: "center",
-        width: "5%",
+        width: "10%",
         renderCell: (data: any) => (
           <p>{format(new Date(data.encounterDateTime), DATE_TIME_FORMAT)}</p>
         ),
@@ -142,7 +142,7 @@ const PatientSummary: React.FC = () => {
       {
         title: "Tên xét nghiệm / chỉ số",
         align: "center",
-        width: "10%",
+        width: "20%",
         renderCell: (data: any) => <p>{data.formFieldPath}</p>,
       },
       // {
@@ -154,7 +154,7 @@ const PatientSummary: React.FC = () => {
       {
         title: "Kết quả",
         align: "center",
-        width: "10%",
+        width: "70%",
         renderCell: (data: any) => <p>{data.value}</p>,
       },
       // {
@@ -168,7 +168,7 @@ const PatientSummary: React.FC = () => {
       {
         title: "Ngày giờ",
         align: "center",
-        width: "5%",
+        width: "10%",
         renderCell: (data: any) => (
           <p>{format(new Date(data.encounterDateTime), DATE_TIME_FORMAT)}</p>
         ),
@@ -176,13 +176,13 @@ const PatientSummary: React.FC = () => {
       {
         title: "Loại chụp",
         align: "center",
-        width: "10%",
+        width: "20%",
         renderCell: (data: any) => <p>{data.formFieldPath}</p>,
       },
       {
         title: "Kết quả",
         align: "center",
-        width: "10%",
+        width: "70%",
         renderCell: (data: any) => <p>{data.value}</p>,
       },
     ],
