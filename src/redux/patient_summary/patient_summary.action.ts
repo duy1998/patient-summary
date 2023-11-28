@@ -26,7 +26,7 @@ export const fetchPatientSummaryAction =
 
     try {
       const response = await fetchData();
-      const data = fakeData;
+      const data = response.data as any;
       dispatch({
         type: FETCH_PATIENT_SUMMARY_SUCCESS,
         payload: {
