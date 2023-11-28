@@ -32,17 +32,17 @@ export const fetchPatientSummaryAction =
         payload: {
           patientInfo: data.person,
           medicalRecords: data.visits,
-          selectedResultTabs: RESULT_TAB_1,
           drugOrders: data.drugOrders,
           labOrders: data.labOrders,
           procedureOrders: data.procedureOrders,
           imagingDiagnosisOrders: data.imagingDiagnosisOrders,
-          results: {
-            RESULT_TAB_1: data.labOrders,
-            RESULT_TAB_2: data.imagingDiagnosisOrders,
-            RESULT_TAB_3: data.procedureOrders,
-            RESULT_TAB_4: data.drugOrders?.visitDrugOrders ?? [],
-          },
+          // selectedResultTabs: RESULT_TAB_1,
+          // results: {
+          //   RESULT_TAB_1: data.labOrders,
+          //   RESULT_TAB_2: data.imagingDiagnosisOrders,
+          //   RESULT_TAB_3: data.procedureOrders,
+          //   RESULT_TAB_4: data.drugOrders?.visitDrugOrders ?? [],
+          // },
         },
       });
     } catch (error: any) {

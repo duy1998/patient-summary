@@ -427,7 +427,7 @@ export default function PatientSummary() {
                   ...row,
                   id: row.uuid,
                   onClickRow: (data: MedicalRecord) => {
-                    // dispatch(getResultsByMedicalRecordAction(data.uuid));
+                    dispatch(getResultsByMedicalRecordAction(data.uuid));
                   },
                 })) || []
               }
