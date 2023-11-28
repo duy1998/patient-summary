@@ -29,7 +29,7 @@ import {
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "src/utils/common";
 
-export default function PatientSummary() {
+const PatientSummary: React.FC = () => {
   const patientInfo: PatientInfo | null = useSelector((state: RootState) =>
     state.patientSummaryReducer.patientSummaryData?.status ===
       ApiStatus.SUCCESS &&
@@ -68,6 +68,7 @@ export default function PatientSummary() {
 
   useEffect(() => {
     dispatch(fetchPatientSummaryAction());
+    return () => {};
   }, [dispatch]);
 
   const medicalRecordColumns: MColumn[] = [
@@ -132,37 +133,36 @@ export default function PatientSummary() {
           <p>{format(new Date(data.encounterDateTime), DATE_TIME_FORMAT)}</p>
         ),
       },
-      {
-        title: "Loại xét nghiệm",
-        align: "center",
-        width: "10%",
-        renderCell: (data: any) => <p>{data.conceptNameToDisplay}</p>,
-      },
+      // {
+      //   title: "Loại xét nghiệm",
+      //   align: "center",
+      //   width: "10%",
+      //   renderCell: (data: any) => <p>{data.conceptNameToDisplay}</p>,
+      // },
       {
         title: "Tên xét nghiệm / chỉ số",
         align: "center",
         width: "10%",
         renderCell: (data: any) => <p>{data.formFieldPath}</p>,
       },
-      {
-        title: "Tham chiếu",
-        align: "center",
-        width: "10%",
-        renderCell: (data: any) => <p>{data.ref}</p>,
-      },
-
+      // {
+      //   title: "Tham chiếu",
+      //   align: "center",
+      //   width: "10%",
+      //   renderCell: (data: any) => <p>{data.ref}</p>,
+      // },
       {
         title: "Kết quả",
         align: "center",
         width: "10%",
         renderCell: (data: any) => <p>{data.value}</p>,
       },
-      {
-        title: "Đơn vị",
-        align: "center",
-        width: "2%",
-        renderCell: (data: any) => <p>{data.concept.unit ?? ""}</p>,
-      },
+      // {
+      //   title: "Đơn vị",
+      //   align: "center",
+      //   width: "2%",
+      //   renderCell: (data: any) => <p>{data.concept.unit ?? ""}</p>,
+      // },
     ],
     RESULT_TAB_2: [
       {
@@ -487,4 +487,6 @@ export default function PatientSummary() {
       </div>
     </div>
   );
-}
+};
+
+export default PatientSummary;
