@@ -27,6 +27,7 @@ import {
   getResultsByMedicalRecordAction,
 } from "src/redux/patient_summary/patient_summary.action";
 import { format } from "date-fns";
+import { DATE_TIME_FORMAT } from "src/utils/common";
 
 export default function PatientSummary() {
   const patientInfo: PatientInfo | null = useSelector((state: RootState) =>
@@ -75,7 +76,7 @@ export default function PatientSummary() {
       align: "center",
       width: "5%",
       renderCell: (data: any) => (
-        <p>{format(new Date(data.startDatetime), "HH:mm dd/mm/yyyy")}</p>
+        <p>{format(new Date(data.startDatetime), DATE_TIME_FORMAT)}</p>
       ),
     },
     {
@@ -128,7 +129,7 @@ export default function PatientSummary() {
         align: "center",
         width: "5%",
         renderCell: (data: any) => (
-          <p>{format(new Date(data.encounterDateTime), "HH:mm dd/mm/yyyy")}</p>
+          <p>{format(new Date(data.encounterDateTime), DATE_TIME_FORMAT)}</p>
         ),
       },
       {
@@ -169,7 +170,7 @@ export default function PatientSummary() {
         align: "center",
         width: "5%",
         renderCell: (data: any) => (
-          <p>{format(new Date(data.encounterDateTime), "HH:mm dd/mm/yyyy")}</p>
+          <p>{format(new Date(data.encounterDateTime), DATE_TIME_FORMAT)}</p>
         ),
       },
       {
@@ -191,7 +192,7 @@ export default function PatientSummary() {
         align: "center",
         width: "5%",
         renderCell: (data: any) => (
-          <p>{format(new Date(data.encounterDateTime), "HH:mm dd/mm/yyyy")}</p>
+          <p>{format(new Date(data.encounterDateTime), DATE_TIME_FORMAT)}</p>
         ),
       },
       {
@@ -219,9 +220,7 @@ export default function PatientSummary() {
         align: "center",
         width: "5%",
         renderCell: (data: any) => (
-          <p>
-            {format(new Date(data.visit.startDateTime), "HH:mm dd/mm/yyyy")}
-          </p>
+          <p>{format(new Date(data.visit.startDateTime), DATE_TIME_FORMAT)}</p>
         ),
       },
       {
@@ -289,10 +288,9 @@ export default function PatientSummary() {
   return (
     <div
       style={{
-        padding: 10,
+        padding: "10px 10px 20px 10px",
         display: "flex",
         flexDirection: "column",
-        height: "calc(100vh - 20px)",
       }}
     >
       <div
@@ -444,7 +442,7 @@ export default function PatientSummary() {
           flex: 2,
           display: "flex",
           flexDirection: "column",
-          marginBottom: 10,
+          paddingBottom: 10,
         }}
       >
         <fieldset style={{ height: "100%" }}>
