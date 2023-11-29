@@ -1,4 +1,5 @@
 import React from "react";
+import { useStyles } from "./VitalSignBox.styles";
 
 interface VitalSign {
   range: string | undefined;
@@ -15,26 +16,22 @@ interface VitalSignBoxProps {
 export default function VitalSignBox(props: VitalSignBoxProps) {
   const { title, color, primaryVital } = props.data;
 
+  const classes = useStyles();
+
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <div className={classes.container}>
       <div
+        className={classes.infoContainer}
         style={{
           background: color,
-          padding: "8px 5px",
-          fontSize: 14,
-          minWidth: 100,
-          textAlign: "center",
-          fontWeight: 600,
         }}
       >
         {title}
       </div>
-      <div style={{ fontSize: 25, color: color, fontWeight: 600 }}>{`${
+      <div style={{ color: color, fontWeight: 600, margin: "4px 0px" }}>{`${
         primaryVital.value ?? "-"
       }`}</div>
-      <div style={{ fontSize: 15 }}>{`${primaryVital.range ?? ""}`}</div>
+      <div>{`${primaryVital.range ?? ""}`}</div>
     </div>
   );
 }

@@ -30,6 +30,8 @@ import {
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "src/utils/common";
 import ReactMarkdown from "react-markdown";
+import { useStyles } from "./PatientSummary.styles";
+import { ScreenType, useScreenType } from "src/hook/useScreenType";
 
 const PatientSummary: React.FC = () => {
   const patientInfo: PatientInfo | null = useSelector((state: RootState) =>
@@ -67,11 +69,32 @@ const PatientSummary: React.FC = () => {
   );
 
   const dispatch = useDispatch();
+  const classes = useStyles();
+
+  const { screenType } = useScreenType();
+
+  console.log(screenType);
 
   useEffect(() => {
     dispatch(fetchPatientSummaryAction());
     return () => {};
   }, [dispatch]);
+
+  const reasonElement = () => (
+    <div
+      style={{
+        margin: "0px 0px 10px 10px",
+        border: "1px solid",
+        padding: 5,
+        height: "calc(100% - 15px)",
+      }}
+    >
+      <span>Lý do khám: </span>
+      <span style={{ fontWeight: 600 }}>
+        {patientInfo?.vital?.chronicDisease ?? ""}
+      </span>
+    </div>
+  );
 
   const medicalRecordColumns: MColumn[] = [
     {
@@ -295,22 +318,61 @@ const PatientSummary: React.FC = () => {
     };
   };
 
+  const vitalSignBoxElement = () => {
+    console.log();
+    if (screenType === ScreenType.MOBILE) {
+    }
+    return (
+      <fieldset style={{ height: "100%", marginTop: 10 }}>
+        <legend style={{ fontWeight: 700 }}>Lần khám hiện tại</legend>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Grid container spacing={6}>
+            <Grid
+              item
+              xs={8}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              {vitalSignsData
+                .map((item, index) => {
+                  return {
+                    ...item,
+                    primaryVital: getRangeFromIndex(index),
+                  };
+                })
+                .map((item1) => (
+                  <VitalSignBox key={item1.title} data={item1} />
+                ))}
+            </Grid>
+            {screenType !== ScreenType.MOBILE &&
+              screenType !== ScreenType.TABLET && (
+                <Grid item xs={4}>
+                  {reasonElement()}
+                </Grid>
+              )}
+          </Grid>
+        </div>
+        {(screenType === ScreenType.DESKTOP ||
+          screenType !== ScreenType.LARGE_DESKTOP) &&
+          reasonElement()}
+      </fieldset>
+    );
+  };
+
   return (
-    <div
-      style={{
-        padding: "10px 10px 20px 10px",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <div
-        style={{
-          fontWeight: 800,
-          textAlign: "center",
-          fontSize: 16,
-          margin: "0px 10px 20px 10px",
-        }}
-      >
+    <div className={classes.container}>
+      <div className={classes.header}>
         {`
         PATIENT SUMMARY - TÓM TẮT THÔNG TIN BỆNH NHÂN - ${
           patientInfo?.display ?? ""
@@ -325,6 +387,7 @@ const PatientSummary: React.FC = () => {
           item
           xs={9}
           md={10}
+          className={classes.generalInfoContainer}
           style={{ display: "flex", flexDirection: "column" }}
         >
           <Grid container spacing={1}>
@@ -346,56 +409,7 @@ const PatientSummary: React.FC = () => {
               <TextBox text={`Bảo hiểm: ${patientInfo?.insurance ?? ""}`} />
             </Grid>
           </Grid>
-          <fieldset style={{ height: "100%", marginTop: 10 }}>
-            <legend style={{ fontWeight: 700 }}>Lần khám hiện tại</legend>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <Grid container spacing={6}>
-                <Grid
-                  item
-                  xs={8}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {vitalSignsData
-                    .map((item, index) => {
-                      return {
-                        ...item,
-                        primaryVital: getRangeFromIndex(index),
-                      };
-                    })
-                    .map((item1) => (
-                      <VitalSignBox key={item1.title} data={item1} />
-                    ))}
-                </Grid>
-                <Grid item xs={4}>
-                  <div
-                    style={{
-                      margin: "0px 0px 10px 10px",
-                      border: "1px solid",
-                      padding: 5,
-                      height: "calc(100% - 15px)",
-                    }}
-                  >
-                    <span>Lý do khám: </span>
-                    <span style={{ fontWeight: 600 }}>
-                      {patientInfo?.vital?.chronicDisease ?? ""}
-                    </span>
-                  </div>
-                </Grid>
-              </Grid>
-            </div>
-          </fieldset>
+          {vitalSignBoxElement()}
         </Grid>
         <Grid item xs={3} md={2}>
           <div
@@ -407,18 +421,20 @@ const PatientSummary: React.FC = () => {
               alignItems: "center",
             }}
           >
-            <p style={{ fontWeight: 700, margin: 0 }}>Đặc điểm bệnh nhân</p>
-            <div style={{ color: "#ca8517", fontSize: 18, fontWeight: 700 }}>
+            <p style={{ fontWeight: 700, margin: 0, fontSize: "1em" }}>
+              Đặc điểm bệnh nhân
+            </p>
+            <div style={{ color: "#ca8517", fontSize: "1em", fontWeight: 700 }}>
               <p>{patientInfo?.vital?.height ?? ""}</p>
               <p>{patientInfo?.vital?.weight ?? ""}</p>
             </div>
-            <p style={{ margin: 0, fontSize: 15 }}>
+            <p style={{ margin: 0, fontSize: "1em" }}>
               {patientInfo?.vital?.chronicDisease ?? ""}
             </p>
           </div>
         </Grid>
       </Grid>
-      <div
+      {/* <div
         style={{
           width: "100%",
           marginTop: 10,
@@ -498,7 +514,7 @@ const PatientSummary: React.FC = () => {
             />
           )}
         </fieldset>
-      </div>
+      </div> */}
     </div>
   );
 };

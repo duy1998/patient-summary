@@ -1,9 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) => ({
-  table: {
-    minWidth: 650,
-  },
   container: {
     fontSize: "10px",
 
@@ -18,28 +15,26 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("lg")]: {
       fontSize: "14px",
     },
-    padding: "10px 10px 20px 10px",
     display: "flex",
     flexDirection: "column",
+    alignItems: "center"
   },
-  header: {
-    fontWeight: 800,
-    textAlign: "center",
-    margin: "0em 1em 2em 1em",
-  },
-  generalInfoContainer: {
-    fontSize: "10px",
+  infoContainer: {
+    minWidth: 100,
 
     [theme.breakpoints.between("sm", "md")]: {
-      fontSize: "10px",
+      minWidth: 80,
     },
 
     [theme.breakpoints.between("md", "lg")]: {
-      fontSize: "12px",
+      minWidth: 100,
     },
 
     [theme.breakpoints.up("lg")]: {
-      fontSize: "14px",
+      minWidth: 120,
     },
+    padding: "8px 5px",
+    textAlign: "center",
+    fontWeight: 600,
   },
 }));
