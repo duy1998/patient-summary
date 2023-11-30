@@ -71,19 +71,17 @@ const PatientSummary: React.FC = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const { screenType } = useScreenType();
-
-  console.log(screenType);
+  const { screenType, parentWidth, parentRef } = useScreenType();
 
   useEffect(() => {
     dispatch(fetchPatientSummaryAction());
     return () => {};
   }, [dispatch]);
 
-  const reasonElement = () => (
+  const reasonElement = (margin?: string) => (
     <div
       style={{
-        margin: "0px 0px 10px 10px",
+        margin: margin ?? "0px 0px 10px 10px",
         border: "1px solid",
         padding: 5,
         height: "calc(100% - 15px)",
@@ -319,11 +317,17 @@ const PatientSummary: React.FC = () => {
   };
 
   const vitalSignBoxElement = () => {
-    console.log();
     if (screenType === ScreenType.MOBILE) {
     }
     return (
-      <fieldset style={{ height: "100%", marginTop: 10 }}>
+      <fieldset
+        style={{
+          height: "100%",
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <legend style={{ fontWeight: 700 }}>Lần khám hiện tại</legend>
         <div
           style={{
@@ -337,7 +341,7 @@ const PatientSummary: React.FC = () => {
           <Grid container spacing={6}>
             <Grid
               item
-              xs={8}
+              xs={screenType === ScreenType.DESKTOP ? 8 : 12}
               style={{
                 display: "flex",
                 flexDirection: "row",
@@ -355,23 +359,20 @@ const PatientSummary: React.FC = () => {
                   <VitalSignBox key={item1.title} data={item1} />
                 ))}
             </Grid>
-            {screenType !== ScreenType.MOBILE &&
-              screenType !== ScreenType.TABLET && (
-                <Grid item xs={4}>
-                  {reasonElement()}
-                </Grid>
-              )}
+            {screenType === ScreenType.DESKTOP && (
+              <Grid item xs={4}>
+                {reasonElement()}
+              </Grid>
+            )}
           </Grid>
         </div>
-        {(screenType === ScreenType.DESKTOP ||
-          screenType !== ScreenType.LARGE_DESKTOP) &&
-          reasonElement()}
+        {screenType !== ScreenType.DESKTOP && reasonElement("10px 0px")}
       </fieldset>
     );
   };
 
   return (
-    <div className={classes.container}>
+    <div className={classes.container} ref={parentRef}>
       <div className={classes.header}>
         {`
         PATIENT SUMMARY - TÓM TẮT THÔNG TIN BỆNH NHÂN - ${
@@ -434,7 +435,7 @@ const PatientSummary: React.FC = () => {
           </div>
         </Grid>
       </Grid>
-      {/* <div
+      <div
         style={{
           width: "100%",
           marginTop: 10,
@@ -514,7 +515,7 @@ const PatientSummary: React.FC = () => {
             />
           )}
         </fieldset>
-      </div> */}
+      </div>
     </div>
   );
 };

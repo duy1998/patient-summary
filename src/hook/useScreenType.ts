@@ -1,27 +1,47 @@
-import useTheme from "@material-ui/core/styles/useTheme";
+import { useEffect, useRef, useState } from "react";
 
 export enum ScreenType {
-  MOBILE,
-  TABLET,
-  DESKTOP,
-  LARGE_DESKTOP,
+  MOBILE = "MOBILE",
+  TABLET = "TABLET",
+  DESKTOP = "DESKTOP",
 }
 
 export function useScreenType() {
-  const theme = useTheme();
+  const [parentWidth, setParentWidth] = useState(0);
+  const parentRef = useRef(null);
+
+  useEffect(() => {
+    const updateParentWidth = () => {
+      if (parentRef.current) {
+        const width = (parentRef.current as HTMLElement).getBoundingClientRect()
+          .width;
+        setParentWidth(width);
+      }
+    };
+
+    // Initial measurement
+    updateParentWidth();
+
+    // Update on resize
+    const handleResize = () => {
+      updateParentWidth();
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   let screenType;
-  if (theme.breakpoints.down("sm")) {
+
+  if (parentWidth < 600) {
     screenType = ScreenType.MOBILE;
-  } else if (theme.breakpoints.between("sm", "md")) {
+  } else if (parentWidth >= 600 && parentWidth < 1024) {
     screenType = ScreenType.TABLET;
-  } else if (theme.breakpoints.between("md", "lg")) {
-    screenType = ScreenType.DESKTOP;
-  } else if (theme.breakpoints.up("lg")) {
-    screenType = ScreenType.LARGE_DESKTOP;
-  } else {
+  } else if (parentWidth >= 1024) {
     screenType = ScreenType.DESKTOP;
   }
 
-  return { screenType };
+  return { screenType, parentWidth, parentRef };
 }
